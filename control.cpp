@@ -86,10 +86,11 @@ int main (int argc, char **argv){
 				v=krho*rho;
 				gamma=kalpha*alpha+kbeta*beta;
 			}
-
-			if(alpha<-1.57 || alpha>1.57){
+			//Si el punto deseado esta detras del movil, avanza de reversa
+			if(deltax<0 || deltay<0){
 				v=-v;
 				gamma=-gamma;
+				ROS_INFO_STREAM("De reversa mami");
 			}
 
 			//Publicar control
