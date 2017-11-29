@@ -76,8 +76,8 @@ int main (int argc, char **argv){
 
 	//Valores de control
 	krho=1;
-	kalpha=1.1;
-	kbeta=-0.3;
+	kalpha=1.5;
+	kbeta=-1;
 	e=0.2;
 	sign=1;
 	
