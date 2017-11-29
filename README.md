@@ -18,6 +18,10 @@ theta: 0.0"' para dar una pose deseada al automovil. Ahora podra ver al automovi
 
 Pestana4 - Ejecutar 'rostopic echo robot/pose' para ver la posicion real del automovil con coordenadas.
 
+El video de las pruebas relizadas se puede descargar en el siguiente link de Google Drive:
+
+https://drive.google.com/open?id=1FYZ_Bcuzai2EVxlVqrDa7vW9cO6Y1gl8
+
 
 
 
