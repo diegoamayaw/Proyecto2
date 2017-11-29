@@ -75,13 +75,14 @@ int main (int argc, char **argv){
 	L=0.32;
 
 	//Valores de control
-	krho=0.5;
-	kalpha=4;
-	kbeta=-1;
+	krho=1;
+	kalpha=1.2;
+	kbeta=-0.5;
 	e=0.2;
 	sign=1;
 	
 	//Ángulos alpha y beta se calculan en radianes
+	//STEERING ESTA EN GRADOS
 
 	//Ciclo principal
     	while (ros::ok()) {
@@ -97,11 +98,22 @@ int main (int argc, char **argv){
 				flag2=false;	
 			}else{
 				rho=error;
-				alpha=atan(deltay/deltax)-theta;
-				beta=-theta-alpha;
+				alpha=(atan(deltay/deltax)-theta)*180/3.1416;
+				beta=-((theta+thetad)*180/3.1416)-alpha;
 
 				v=krho*rho*sign;
 				gamma=(kalpha*alpha+kbeta*beta)*sign;
+				//Poner maximo a velocidad y giro
+				if(v>6){
+					v=6;
+				}else if(v<-6){
+					v=-6;
+				}
+				if(gamma>90)
+					gamma=90;
+				else if(gamma<-90){
+					gamma=-90;
+				}
 			}
 			
 			//Publicar control
