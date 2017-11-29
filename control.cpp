@@ -6,9 +6,11 @@
 #include <math.h>
 
 //variables recibidas
-double x, y, theta, xd, yd, thetad, L, hz, e;
+double x, y, theta, xd, yd, thetad, L, hz, e, a, deltax, deltay, vectx, vecty;
 //variables internas de control
 bool flag1,flag2;
+//variable de signo
+int sign;
 
 // callback para leer la posicion del movil
 void poseMessageReceived (const geometry_msgs::Pose2D& msg1){
@@ -24,11 +26,24 @@ void poseDMessageReceived (const geometry_msgs::Pose2D& msg2){
 	yd=msg2.y;
 	thetad=msg2.theta;
 	flag2=true;
+	//Condiciones iniciales	
+	deltax=(xd-x);
+	deltay=(yd-y);
+	vectx=cos(theta);
+	vecty=sin(theta);
+	a=deltax*vectx+deltay*vecty;
+	//Si el punto deseado esta detras del movil, avanza de reversa
+	ROS_INFO_STREAM("Producto punto: "<< a);
+	if (a<0){
+		sign=-1;
+	}else{
+		sign=1;
+	}
 }
 
 int main (int argc, char **argv){
 	//variables internas
-	double rho, alpha, beta, krho, kalpha, kbeta, w, deltax, deltay, error;	
+	double rho, alpha, beta, krho, kalpha, kbeta, w, error;	
 	//variables de publicacion
 	double v, gamma;
 
@@ -60,10 +75,11 @@ int main (int argc, char **argv){
 	L=0.32;
 
 	//Valores de control
-	krho=1;
-	kalpha=8;
-	kbeta=-2;
-	e=0.10;
+	krho=0.5;
+	kalpha=4;
+	kbeta=-1;
+	e=0.2;
+	sign=1;
 	
 	//Ángulos alpha y beta se calculan en radianes
 
@@ -77,22 +93,17 @@ int main (int argc, char **argv){
 			error=sqrt(deltax*deltax+deltay*deltay);
 			if(e>error){
 				gamma=0;
-				v=0;	
+				v=0;
+				flag2=false;	
 			}else{
 				rho=error;
 				alpha=atan(deltay/deltax)-theta;
 				beta=-theta-alpha;
 
-				v=krho*rho;
-				gamma=kalpha*alpha+kbeta*beta;
+				v=krho*rho*sign;
+				gamma=(kalpha*alpha+kbeta*beta)*sign;
 			}
-			//Si el punto deseado esta detras del movil, avanza de reversa
-			if(deltax<0 || deltay<0){
-				v=-v;
-				gamma=-gamma;
-				ROS_INFO_STREAM("De reversa mami");
-			}
-
+			
 			//Publicar control
 			msgSteering.data=gamma;
 			msgVelocity.data=v;
