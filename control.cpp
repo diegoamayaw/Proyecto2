@@ -76,8 +76,8 @@ int main (int argc, char **argv){
 
 	//Valores de control
 	krho=1;
-	kalpha=1.2;
-	kbeta=-0.5;
+	kalpha=1.1;
+	kbeta=-0.3;
 	e=0.2;
 	sign=1;
 	
@@ -99,7 +99,7 @@ int main (int argc, char **argv){
 			}else{
 				rho=error;
 				alpha=(atan(deltay/deltax)-theta)*180/3.1416;
-				beta=-((theta+thetad)*180/3.1416)-alpha;
+				beta=-(theta*180/3.1416)-alpha;
 
 				v=krho*rho*sign;
 				gamma=(kalpha*alpha+kbeta*beta)*sign;
